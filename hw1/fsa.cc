@@ -16,7 +16,7 @@ using namespace std;
 bool CheckIfNFA(const TableElement* elements, int num_elements) {
   set< pair<int, char> > sMovesOnStates;
 
-  for(int i=0; i<num_elements; i++) {
+  for (int i=0; i<num_elements; i++) {
     if (elements[i].input_char == kEps) {
       // If there exists any epsilon-moves, it is NFA
       LOG << "Epsilon-move found on state " << elements[i].state << endl;
