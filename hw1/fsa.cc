@@ -43,9 +43,10 @@ bool CheckIfNFA(const TableElement* elements, int num_elements) {
 bool BuildDFA(const TableElement* elements, int num_elements,
               const int* accept_states, int num_accept_states,
               FiniteStateAutomaton* fsa) {
-  // Implement this function.
   LOG << "num_elements: " << num_elements << endl;
+  LOG << "num_accept_states: " << num_accept_states << endl;
   if (num_elements <= 0) return false;
+
   return false;
 }
 
