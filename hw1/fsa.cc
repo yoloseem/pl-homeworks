@@ -14,6 +14,8 @@ const char kEps = '#';
 using namespace std;
 
 bool CheckIfNFA(const TableElement* elements, int num_elements) {
+  set< pair<int, char> > sMovesOnStates;
+
   for(int i=0; i<num_elements; i++) {
     if (elements[i].input_char == kEps) {
       // If there exists any epsilon-moves, it is NFA
@@ -21,8 +23,20 @@ bool CheckIfNFA(const TableElement* elements, int num_elements) {
       return true;
     }
 
-    // TODO: Detect multiple transitions
+    pair<int, char> pMoving = make_pair(elements[i].state,
+                                        elements[i].input_char);
+    set< pair<int, char> >::iterator duplicateDetection =
+        sMovesOnStates.find(pMoving);
+    if (duplicateDetection != sMovesOnStates.end()) {
+        // If there exists multiple transitions, it is NFA
+        LOG << "Multiple transitions found on state " << elements[i].state
+            << " with input " << elements[i].input_char << endl;
+        return true;
+    }
+    sMovesOnStates.insert(pMoving);
   }
+
+  // No epsilon-moves and no multiple transitions, it is DFA
   return false;
 }
 
