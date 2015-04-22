@@ -5,7 +5,7 @@
 
 #include "fsa.h"
 
-#define DISABLE_LOG true
+#define DISABLE_LOG false // true
 #define LOG \
     if (DISABLE_LOG) {} else std::cerr
 
