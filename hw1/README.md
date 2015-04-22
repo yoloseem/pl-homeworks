@@ -39,5 +39,5 @@ Write C/C++ functions that builds and runs a finite state automaton.
 
 ### Due: Apr 24 (Fri) 11:59 pm
 
-– Zip the source code (ONLY `.h`, `.cc` and `Makefile`; absolutely no executable or object files) and submit it in ezhub (portal).
-– The program must run on the Linux server (`csedev.hanyang.ac.kr`).
+* Zip the source code (ONLY `.h`, `.cc` and `Makefile`; absolutely no executable or object files) and submit it in ezhub (portal).
+* The program must run on the Linux server (`csedev.hanyang.ac.kr`).
