@@ -15,6 +15,8 @@ using namespace std;
 
 bool CheckIfNFA(const TableElement* elements, int num_elements) {
   set< pair<int, char> > sMovesOnStates;
+  set<int> sStates;
+  set<char> sAlphabet;
 
   for (int i=0; i<num_elements; i++) {
     if (elements[i].input_char == kEps) {
@@ -34,7 +36,26 @@ bool CheckIfNFA(const TableElement* elements, int num_elements) {
         return true;
     }
     sMovesOnStates.insert(pMoving);
+
+    if (elements[i].input_char != kEps) {
+      // Register given input_char into alphabet set.
+      // Of course epsilon-move cannot enter here, but to be defensive..
+      sAlphabet.insert(elements[i].input_char);
+    }
+    // Register given state into states set;
+    sStates.insert(elements[i].state);
+    sStates.insert(elements[i].next_state);
   }
+  vector<char> alphabets (sAlphabet.begin(), sAlphabet.end());
+  vector<int> states (sStates.begin(), sStates.end());
+
+  LOG << "Detected alphabets:";
+  for (int i=0; i<alphabets.size(); i++)
+    LOG << ' ' << alphabets[i];
+  LOG << endl << "Detected states:";
+  for (int i=0; i<states.size(); i++)
+    LOG << ' ' << states[i];
+  LOG << endl;
 
   // TODO: Detect omitted to-trap transitions
 

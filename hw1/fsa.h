@@ -6,6 +6,7 @@
 
 #include <map>
 #include <set>
+#include <vector>
 
 struct TableElement {
   int state;
