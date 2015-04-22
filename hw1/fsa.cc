@@ -36,7 +36,10 @@ bool CheckIfNFA(const TableElement* elements, int num_elements) {
     sMovesOnStates.insert(pMoving);
   }
 
-  // No epsilon-moves and no multiple transitions, it is DFA
+  // TODO: Detect omitted to-trap transitions
+
+  // No epsilon-moves, no missing transitions, and no multiple transitions,
+  // it is DFA
   return false;
 }
 
