@@ -44,7 +44,9 @@ bool RunFSA(const FiniteStateAutomaton* fsa, const char* str) {
 bool BuildFSA(const TableElement* elements, int num_elements,
               const int* accept_states, int num_accepts,
               FiniteStateAutomaton* fsa) {
-  if (CheckIfNFA(elements, num_elements)) {
+  bool isNFA = CheckIfNFA(elements, num_elements);
+  LOG << "Given FSA is " << (isNFA ? "NFA" : "DFA") << endl;
+  if (isNFA) {
     return BuildNFA(elements, num_elements, accept_states, num_accepts, fsa);
   } else {
     return BuildDFA(elements, num_elements, accept_states, num_accepts, fsa);
