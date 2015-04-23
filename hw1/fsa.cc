@@ -43,26 +43,6 @@ bool CheckIfNFA(const TableElement* elements, int num_elements) {
     sStates.insert(elements[i].state);
     sStates.insert(elements[i].next_state);
   }
-  vector<char> alphabets (sAlphabets.begin(), sAlphabets.end());
-  vector<int> states (sStates.begin(), sStates.end());
-
-  LOG << "Detected alphabets:";
-  for (int i=0; i<alphabets.size(); i++) LOG << ' ' << alphabets[i];
-  LOG << endl << "Detected states:";
-  for (int i=0; i<states.size(); i++) LOG << ' ' << states[i];
-  LOG << endl;
-
-  for (int i=0; i<states.size(); i++) {
-    for (int j=0; j<alphabets.size(); j++) {
-      pair<int, char> pMoving = make_pair(states[i], alphabets[j]);
-      bool missingTrans = (sTransDomains.find(pMoving) == sTransDomains.end());
-      if (missingTrans) {
-        LOG << "Missing transition detected: δ(" << states[i] << ", "
-            << alphabets[j] << ")" << endl;
-        return NFA;
-      }
-    }
-  }
 
   return DFA;
 }
