@@ -27,10 +27,11 @@ bool CheckIfNFA(const TableElement* elements, int num_elements) {
 
     pair<int, char> pMoving = make_pair(elements[i].state,
                                         elements[i].input_char);
-    set< pair<int, char> >::iterator duplicateDetection =
-      sMovesOnStates.find(pMoving);
-    if (duplicateDetection != sMovesOnStates.end()) {
-      // If there exists multiple transitions, it is NFA
+    bool multipleTransitions = (
+      sMovesOnStates.find(pMoving) != sMovesOnStates.end()
+    );
+    if (multipleTransitions) {
+      // If multiple transitions dectected, it is NFA
       LOG << "Multiple transitions found on state " << elements[i].state
           << " with input " << elements[i].input_char << endl;
       return true;
