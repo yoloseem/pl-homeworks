@@ -115,8 +115,14 @@ bool BuildDFA(const TableElement* elements, int num_elements,
 
   for (int i=0; i < fsa->states.size(); i++) {
     for (int j=0; j < fsa->alphabets.size(); j++) {
+      int next_state;
+      try {
+        next_state = fsa->transitions.at(fsa->states[i]).at(fsa->alphabets[j]);
+      } catch (const out_of_range& oor) {
+        continue;
+      }
       LOG << "δ(q" << fsa->states[i] << ", " << fsa->alphabets[j] << ") = ";
-      LOG << "q" << fsa->transitions[fsa->states[i]][fsa->alphabets[j]];
+      LOG << "q" << next_state;
       LOG << endl;
     }
   }
