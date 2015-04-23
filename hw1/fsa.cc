@@ -133,7 +133,16 @@ bool BuildNFA(const TableElement* elements, int num_elements,
 
 // Homework 1.1
 bool RunFSA(const FiniteStateAutomaton* fsa, const char* str) {
-  // Implement this function.
+  const int n = strlen(str);
+  LOG << "Query: '" << str << "' (Length: " << n << ")" << endl;
+
+  if (n == 0) {
+    bool startIsFinal = (find(fsa->accept_states.begin(),
+                              fsa->accept_states.end(),
+                              fsa->start_state) != fsa->accept_states.end());
+    return startIsFinal;
+  }
+
   return false;
 }
 
