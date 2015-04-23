@@ -130,25 +130,42 @@ bool BuildNFA(const TableElement* elements, int num_elements,
   LOG << "num_elements: " << num_elements << endl;
   if (num_elements <= 0) return false;
 
+  int i, j;
+
   set<int> sStates, sAlphabets, sAcceptStates;
-  for (int i=0; i<num_elements; i++) {
+  for (i=0; i<num_elements; i++) {
     sStates.insert(elements[i].state);
     sStates.insert(elements[i].next_state);
     if (elements[i].input_char != kEps)
         sAlphabets.insert(elements[i].input_char);
   }
-  for (int i=0; i<num_accept_states; i++)
+  for (i=0; i<num_accept_states; i++)
     sAcceptStates.insert(accept_states_array[i]);
   vector<char> alphabets (sAlphabets.begin(), sAlphabets.end());
 
+  vector<int> statesLoop;
   vector< set<int> > states, statesToConstruct;
   set<int> startState;
   startState.insert(elements[0].state);
+  // Construct start state with epsiolon-moves
+  while (true) {
+    int previous_cnt = startState.size();
+    statesLoop = vector<int>(startState.begin(), startState.end());
+    for (i=0; i<statesLoop.size(); i++) {
+      for (j=0; j<num_elements; j++) {
+        if (elements[j].state == statesLoop[i] &&
+            elements[j].input_char == kEps)
+          startState.insert(elements[j].next_state);
+      }
+    }
+    if (startState.size() == previous_cnt) {
+      // Discovery completed
+      break;
+    }
+  }
   statesToConstruct.push_back(startState);
 
-  int i, j;
   set<int> handling_state, current_states, next_states, visited_states;
-  vector<int> statesLoop;
   vector< pair<pair< set<int>, set<int> >, char> > trans_edges;
   while (statesToConstruct.size()) {
     handling_state = statesToConstruct.back();
