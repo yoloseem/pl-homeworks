@@ -112,6 +112,7 @@ bool BuildDFA(const TableElement* elements, int num_elements,
     fsa->transitions[elements[i].state]
                     [elements[i].input_char] = elements[i].next_state;
   }
+
   for (int i=0; i < fsa->states.size(); i++) {
     for (int j=0; j < fsa->alphabets.size(); j++) {
       LOG << "δ(q" << fsa->states[i] << ", " << fsa->alphabets[j] << ") = ";
@@ -120,7 +121,7 @@ bool BuildDFA(const TableElement* elements, int num_elements,
     }
   }
 
-  return false;
+  return true;
 }
 
 bool BuildNFA(const TableElement* elements, int num_elements,
