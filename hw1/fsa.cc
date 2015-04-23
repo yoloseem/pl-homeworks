@@ -14,6 +14,8 @@ const char kEps = '#';
 using namespace std;
 
 bool CheckIfNFA(const TableElement* elements, int num_elements) {
+  const bool NFA = true, DFA = false;
+
   set< pair<int, char> > sTransDomains;
   set<int> sStates;
   set<char> sAlphabets;
@@ -22,7 +24,7 @@ bool CheckIfNFA(const TableElement* elements, int num_elements) {
     if (elements[i].input_char == kEps) {
       // If there exists any epsilon-moves, it is NFA
       LOG << "Epsilon-move found on state " << elements[i].state << endl;
-      return true;
+      return NFA;
     }
 
     pair<int, char> pMoving = make_pair(elements[i].state,
@@ -32,7 +34,7 @@ bool CheckIfNFA(const TableElement* elements, int num_elements) {
       // If multiple Trans dectected, it is NFA
       LOG << "Multiple transitions found on state " << elements[i].state
           << " with input " << elements[i].input_char << endl;
-      return true;
+      return NFA;
     }
     sTransDomains.insert(pMoving);
 
@@ -63,14 +65,14 @@ bool CheckIfNFA(const TableElement* elements, int num_elements) {
       if (missingTrans) {
         LOG << "Missing transition detected: δ(" << states[i] << ", "
             << alphabets[j] << ")" << endl;
-        return true;
+        return NFA;
       }
     }
   }
 
   // No epsilon-moves, no missing transitions, and no multiple transitions
   // it is DFA
-  return false;
+  return DFA;
 }
 
 bool BuildDFA(const TableElement* elements, int num_elements,
