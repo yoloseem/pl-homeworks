@@ -47,11 +47,9 @@ bool CheckIfNFA(const TableElement* elements, int num_elements) {
   vector<int> states (sStates.begin(), sStates.end());
 
   LOG << "Detected alphabets:";
-  for (int i=0; i<alphabets.size(); i++)
-    LOG << ' ' << alphabets[i];
+  for (int i=0; i<alphabets.size(); i++) LOG << ' ' << alphabets[i];
   LOG << endl << "Detected states:";
-  for (int i=0; i<states.size(); i++)
-    LOG << ' ' << states[i];
+  for (int i=0; i<states.size(); i++) LOG << ' ' << states[i];
   LOG << endl;
 
   for (int i=0; i<states.size(); i++) {
