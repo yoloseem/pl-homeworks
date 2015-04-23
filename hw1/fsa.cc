@@ -143,7 +143,28 @@ bool RunFSA(const FiniteStateAutomaton* fsa, const char* str) {
     return startIsFinal;
   }
 
-  return false;
+  int current_state = fsa->start_state;
+  while (str[0] != '\0') {
+    char input_char = str[0];
+    int next_state;
+
+    try {
+      next_state = fsa->transitions.at(current_state).at(input_char);
+    } catch (const out_of_range& oor) {
+      cerr << "Out Of Range exception raised" << endl;
+      return false;
+    }
+    LOG << "δ(q" << current_state << ", " << input_char << ") = q";
+    LOG << next_state << endl;
+
+    str++;
+    current_state = next_state;
+  }
+
+  bool currentIsFinal = (find(fsa->accept_states.begin(),
+                              fsa->accept_states.end(),
+                              current_state) != fsa->accept_states.end());
+  return currentIsFinal;
 }
 
 // Homework 1.1 and 1.2
