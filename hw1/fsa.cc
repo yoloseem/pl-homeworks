@@ -14,7 +14,7 @@ const char kEps = '#';
 using namespace std;
 
 bool CheckIfNFA(const TableElement* elements, int num_elements) {
-  set< pair<int, char> > sTransitionDomains;
+  set< pair<int, char> > sTransDomains;
   set<int> sStates;
   set<char> sAlphabets;
 
@@ -27,16 +27,14 @@ bool CheckIfNFA(const TableElement* elements, int num_elements) {
 
     pair<int, char> pMoving = make_pair(elements[i].state,
                                         elements[i].input_char);
-    bool multipleTransitions = (
-      sTransitionDomains.find(pMoving) != sTransitionDomains.end()
-    );
-    if (multipleTransitions) {
-      // If multiple transitions dectected, it is NFA
+    bool multipleTrans = (sTransDomains.find(pMoving) != sTransDomains.end());
+    if (multipleTrans) {
+      // If multiple Trans dectected, it is NFA
       LOG << "Multiple transitions found on state " << elements[i].state
           << " with input " << elements[i].input_char << endl;
       return true;
     }
-    sTransitionDomains.insert(pMoving);
+    sTransDomains.insert(pMoving);
 
     if (elements[i].input_char != kEps) {
       // Register given input_char into alphabet set.
@@ -58,9 +56,9 @@ bool CheckIfNFA(const TableElement* elements, int num_elements) {
     LOG << ' ' << states[i];
   LOG << endl;
 
-  // TODO: Detect omitted to-trap transitions
+  // TODO: Detect missing transitions
 
-  // No epsilon-moves, no missing transitions, and no multiple transitions,
+  // No epsilon-moves, no missing transitions, and no multiple transitions
   // it is DFA
   return false;
 }
