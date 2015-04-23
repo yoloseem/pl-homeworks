@@ -136,13 +136,6 @@ bool RunFSA(const FiniteStateAutomaton* fsa, const char* str) {
   const int n = strlen(str);
   LOG << "Query: '" << str << "' (Length: " << n << ")" << endl;
 
-  if (n == 0) {
-    bool startIsFinal = (find(fsa->accept_states.begin(),
-                              fsa->accept_states.end(),
-                              fsa->start_state) != fsa->accept_states.end());
-    return startIsFinal;
-  }
-
   int current_state = fsa->start_state;
   while (str[0] != '\0') {
     char input_char = str[0];
