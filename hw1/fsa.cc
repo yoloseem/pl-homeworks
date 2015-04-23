@@ -63,7 +63,7 @@ bool CheckIfNFA(const TableElement* elements, int num_elements) {
       if (missingTrans) {
         LOG << "Missing transition detected: δ(" << states[i] << ", "
             << alphabets[j] << ")" << endl;
-        return false;
+        return true;
       }
     }
   }
