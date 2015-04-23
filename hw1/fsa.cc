@@ -127,8 +127,153 @@ bool BuildDFA(const TableElement* elements, int num_elements,
 bool BuildNFA(const TableElement* elements, int num_elements,
               const int* accept_states_array, int num_accept_states,
               FiniteStateAutomaton* fsa) {
-  // Implement this function.
-  return false;
+  LOG << "num_elements: " << num_elements << endl;
+  if (num_elements <= 0) return false;
+
+  set<int> sStates, sAlphabets, sAcceptStates;
+  for (int i=0; i<num_elements; i++) {
+    sStates.insert(elements[i].state);
+    sStates.insert(elements[i].next_state);
+    if (elements[i].input_char != kEps)
+        sAlphabets.insert(elements[i].input_char);
+  }
+  for (int i=0; i<num_accept_states; i++)
+    sAcceptStates.insert(accept_states_array[i]);
+  vector<char> alphabets (sAlphabets.begin(), sAlphabets.end());
+
+  vector< set<int> > states, statesToConstruct;
+  set<int> startState;
+  startState.insert(elements[0].state);
+  statesToConstruct.push_back(startState);
+
+  int i, j;
+  set<int> handling_state, current_states, next_states, visited_states;
+  vector<int> statesLoop;
+  vector< pair<pair< set<int>, set<int> >, char> > trans_edges;
+  while (statesToConstruct.size()) {
+    handling_state = statesToConstruct.back();
+    statesToConstruct.pop_back();
+    states.push_back(handling_state);
+
+    // Discovery next states with epsilon-moves
+    for (i=0; i<alphabets.size(); i++) {
+      current_states.clear();
+      current_states.insert(handling_state.begin(), handling_state.end());
+      next_states.clear();
+      visited_states.clear();
+
+      while (current_states.size()) {
+        statesLoop = vector<int>(current_states.begin(), current_states.end());
+        current_states.clear();
+        for (vector<int>::iterator it=statesLoop.begin();
+             it!=statesLoop.end(); ++it) {
+          visited_states.insert(*it);
+          for(j=0; j<num_elements; j++) {
+            if (elements[j].state == *it) {
+              if (elements[j].input_char == alphabets[i]) {
+                next_states.insert(elements[j].next_state);
+              }
+              else if (elements[j].input_char == kEps) {
+                bool visited = (visited_states.find(elements[j].next_state)
+                                != visited_states.end());
+                if (!visited)
+                  current_states.insert(elements[j].next_state);
+              }
+            }
+          }
+        }
+      }
+
+      if (next_states.size() == 0) { continue; }
+      pair<pair< set<int>, set<int> >, char> transition_edge;
+      transition_edge = make_pair(make_pair(handling_state, next_states),
+                                  alphabets[i]);
+      trans_edges.push_back(transition_edge);
+
+      for (j=0; j<states.size(); j++)
+        if (states[j] == next_states) break;
+      if (j == states.size()) {
+        for (j=0; j<statesToConstruct.size(); j++)
+          if (statesToConstruct[j] == next_states) break;
+        if (j == statesToConstruct.size()) {
+          statesToConstruct.push_back(next_states);
+        }
+      }
+    }
+  }
+
+  // Let's build DFA
+  fsa->alphabets = alphabets;
+  fsa->start_state = 0;
+
+  bool isAcceptedState;
+  for (i=0; i<states.size(); i++) {
+    isAcceptedState = false;
+    fsa->states.push_back(i);
+    LOG << "q" << i << " => {";
+    for (set<int>::iterator it=states[i].begin(); it!=states[i].end(); ++it) {
+      if (it != states[i].begin()) { LOG << ", "; }
+      LOG << "q" << *it;
+      for (j=0; j<num_accept_states; j++) {
+        if (*it == accept_states_array[j]) {
+          isAcceptedState = true;
+          LOG << "(accept)";
+          break;
+        }
+      }
+      if (isAcceptedState) fsa->accept_states.push_back(i);
+    }
+    LOG << "}" << endl;
+  }
+
+  LOG << "|Q| = " << fsa->states.size() << ". Q = {";
+  for (int i=0; i < fsa->states.size(); i++) {
+    if (i > 0) { LOG << ", "; }
+    LOG << "q" << fsa->states[i];
+  }
+  LOG << "}" << endl;
+  LOG << "|Σ| = " << fsa->alphabets.size() << ". Σ = {";
+  for (int i=0; i < fsa->alphabets.size(); i++) {
+    if (i > 0) { LOG << ", "; }
+    LOG << fsa->alphabets[i];
+  }
+  LOG << "}" << endl;
+  LOG << "|F| = " << fsa->accept_states.size() << ". F = {";
+  for (int i=0; i < fsa->accept_states.size(); i++) {
+    if (i > 0) { LOG << ", "; }
+    LOG << "q" << fsa->accept_states[i];
+  }
+  LOG << "}" << endl;
+
+  LOG << "q_start = q" << fsa->start_state << endl;
+
+  for (i=0; i<trans_edges.size(); i++) {
+    set<int> curstate, nextstate;
+    curstate = trans_edges[i].first.first;
+    nextstate = trans_edges[i].first.second;
+    char input_char = trans_edges[i].second;
+
+    int curstate_i = -1, nextstate_i = -1;
+    for (j=0; j<states.size(); j++) {
+      if (states[j] == curstate) {
+        curstate_i = j;
+      }
+      if (states[j] == nextstate) {
+        nextstate_i = j;
+      }
+      if (curstate_i > -1 && nextstate_i > -1) break;
+    }
+    if (curstate_i == -1 || nextstate_i == -1) {
+      cerr << "Converting failed.." << endl;
+      return false;
+    }
+    fsa->transitions[curstate_i][input_char] = nextstate_i;
+
+    LOG << "δ(q" << curstate_i << ", " << input_char << ") = ";
+    LOG << "q" << nextstate_i << endl;
+  }
+
+  return true;
 }
 
 // Homework 1.1
