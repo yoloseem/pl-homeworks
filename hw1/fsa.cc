@@ -16,7 +16,7 @@ using namespace std;
 bool CheckIfNFA(const TableElement* elements, int num_elements) {
   set< pair<int, char> > sMovesOnStates;
   set<int> sStates;
-  set<char> sAlphabet;
+  set<char> sAlphabets;
 
   for (int i=0; i<num_elements; i++) {
     if (elements[i].input_char == kEps) {
@@ -41,13 +41,13 @@ bool CheckIfNFA(const TableElement* elements, int num_elements) {
     if (elements[i].input_char != kEps) {
       // Register given input_char into alphabet set.
       // Of course epsilon-move cannot enter here, but to be defensive..
-      sAlphabet.insert(elements[i].input_char);
+      sAlphabets.insert(elements[i].input_char);
     }
     // Register given state into states set;
     sStates.insert(elements[i].state);
     sStates.insert(elements[i].next_state);
   }
-  vector<char> alphabets (sAlphabet.begin(), sAlphabet.end());
+  vector<char> alphabets (sAlphabets.begin(), sAlphabets.end());
   vector<int> states (sStates.begin(), sStates.end());
 
   LOG << "Detected alphabets:";
