@@ -57,16 +57,15 @@ bool CheckIfNFA(const TableElement* elements, int num_elements) {
   LOG << endl;
 
   for (int i=0; i<states.size(); i++) {
-      for (int j=0; j<alphabets.size(); j++) {
-          pair<int, char> pMoving = make_pair(states[i], alphabets[j]);
-          bool missingTrans = (sTransDomains.find(pMoving)
-                               == sTransDomains.end());
-          if (missingTrans) {
-              LOG << "Missing transition detected: δ(" << states[i] << ", "
-                  << alphabets[j] << ")" << endl;
-              return false;
-          }
+    for (int j=0; j<alphabets.size(); j++) {
+      pair<int, char> pMoving = make_pair(states[i], alphabets[j]);
+      bool missingTrans = (sTransDomains.find(pMoving) == sTransDomains.end());
+      if (missingTrans) {
+        LOG << "Missing transition detected: δ(" << states[i] << ", "
+            << alphabets[j] << ")" << endl;
+        return false;
       }
+    }
   }
 
   // No epsilon-moves, no missing transitions, and no multiple transitions
