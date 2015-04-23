@@ -15,7 +15,11 @@ struct TableElement {
 };
 
 struct FiniteStateAutomaton {
-  // Make your own FSA struct here.
+  int start_state;
+  std::vector<int> states;
+  std::vector<char> alphabets;
+  std::vector<int> accept_states;
+  std::map< int, std::map<char, int> > transitions;
 };
 
 // Homework 1.1
