@@ -306,7 +306,7 @@ bool RunFSA(const FiniteStateAutomaton* fsa, const char* str) {
     try {
       next_state = fsa->transitions.at(current_state).at(input_char);
     } catch (const out_of_range& oor) {
-      cerr << "Out Of Range exception raised" << endl;
+      LOG << "No transition, so FSA does not accept given input" << endl;
       return false;
     }
     LOG << "δ(q" << current_state << ", " << input_char << ") = q";
