@@ -22,7 +22,6 @@ bool CheckIfNFA(const TableElement* elements, int num_elements) {
 
   for (int i=0; i<num_elements; i++) {
     if (elements[i].input_char == kEps) {
-      // If there exists any epsilon-moves, it is NFA
       LOG << "Epsilon-move found on state " << elements[i].state << endl;
       return NFA;
     }
@@ -31,7 +30,6 @@ bool CheckIfNFA(const TableElement* elements, int num_elements) {
                                         elements[i].input_char);
     bool multipleTrans = (sTransDomains.find(pMoving) != sTransDomains.end());
     if (multipleTrans) {
-      // If multiple Trans dectected, it is NFA
       LOG << "Multiple transitions found on state " << elements[i].state
           << " with input " << elements[i].input_char << endl;
       return NFA;
@@ -39,11 +37,9 @@ bool CheckIfNFA(const TableElement* elements, int num_elements) {
     sTransDomains.insert(pMoving);
 
     if (elements[i].input_char != kEps) {
-      // Register given input_char into alphabet set.
       // Of course epsilon-move cannot enter here, but to be defensive..
       sAlphabets.insert(elements[i].input_char);
     }
-    // Register given state into states set;
     sStates.insert(elements[i].state);
     sStates.insert(elements[i].next_state);
   }
@@ -70,8 +66,6 @@ bool CheckIfNFA(const TableElement* elements, int num_elements) {
     }
   }
 
-  // No epsilon-moves, no missing transitions, and no multiple transitions
-  // it is DFA
   return DFA;
 }
 
