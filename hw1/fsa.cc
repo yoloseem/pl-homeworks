@@ -2,6 +2,10 @@
 // fsa.cc
 
 #include <iostream>
+#include <stdexcept>
+#include <iterator>
+#include <cstring>
+#include <algorithm>
 
 #include "fsa.h"
 
