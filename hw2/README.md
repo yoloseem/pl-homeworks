@@ -3,7 +3,7 @@
 Write C/C++ functions that builds and runs an LR parser.
 
 - Skeleton codes are provided with the assignment.
-- DO NOT change the `lr_parser_main.cc` and `regexp_main.cc` file.
+- DO NOT change the [`lr_parser_main.cc`](https://github.com/yoloseem/pl-homeworks/blob/master/hw2/lr_parser_main.cc) and [`regexp_main.cc`](https://github.com/yoloseem/pl-homeworks/blob/master/hw2/regexp_main.cc) file.
 
 ## 1.1.
 Write C/C++ functions : a function that loads an LR parsing table to build an LR parser, and a function that runs it on input token strings and returns the acceptance (true/false). [**60pts**]
@@ -18,8 +18,8 @@ rule_id lhs_symbol num_rhs
 ...
 ```
 
-- Refer description in the header file `lr_parser.h` for more details.
-- Design the `LRParser` structure in `lr_parser.h`.
+- Refer description in the header file [`lr_parser.h`](https://github.com/yoloseem/pl-homeworks/blob/master/hw2/lr_parser.h) for more details.
+- Design the `LRParser` structure in [`lr_parser.h`](https://github.com/yoloseem/pl-homeworks/blob/master/hw2/lr_parser.h).
 - Implement the `BuildLRParser` function that builds `LRParser` structure using the given table elements.
 - Implement the `RunLRParser` function so that it returns the acceptance of the given token string.
 
