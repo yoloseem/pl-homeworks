@@ -1,2 +1,4 @@
+*/*.o
 hw1/fsa
-hw1/*.o
+hw2/lr_parser
+hw2/regexp
