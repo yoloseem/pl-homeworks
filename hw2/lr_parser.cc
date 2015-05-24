@@ -23,4 +23,3 @@ bool BuildLRParser(const LRTableElement* elements, int num_elements,
 bool RunLRParser(const LRParser* lr_parser, const char* str) {
   return false;
 }
-

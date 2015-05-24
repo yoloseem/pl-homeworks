@@ -47,4 +47,3 @@ bool BuildLRParser(const LRTableElement* elements, int num_elements,
 bool RunLRParser(const LRParser* lr_parser, const char* str);
 
 #endif //_PL_HOMEWORK_LR_PARSER_H_
-
