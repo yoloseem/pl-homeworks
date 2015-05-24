@@ -6,6 +6,9 @@
 
 #include <map>
 #include <set>
+#include <tuple>
+
+using namespace std;
 
 enum LRAction {
   INVALID = 0,
@@ -35,7 +38,9 @@ struct LRRule {
 };
 
 struct LRParser {
-  // Design your LRParser structure.
+  vector<LRTableElement> action_elems;
+  vector<LRTableElement> goto_elems;
+  vector<LRRule> rules;
 };
 
 // Homework 2.1
