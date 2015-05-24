@@ -17,7 +17,19 @@ using namespace std;
 bool BuildLRParser(const LRTableElement* elements, int num_elements,
                    const LRRule* rules, int num_rules,
                    LRParser* lr_parser) {
-  return false;
+  int i;
+
+  for (i=0; i<num_rules; i++)
+    lr_parser->rules.push_back(rules[i]);
+
+  for (i=0; i<num_elements; i++) {
+    if (elements[i].action == GOTO)
+      lr_parser->goto_elems.push_back(elements[i]);
+    else
+      lr_parser->action_elems.push_back(elements[i]);
+  }
+
+  return true;
 }
 
 bool RunLRParser(const LRParser* lr_parser, const char* str) {
