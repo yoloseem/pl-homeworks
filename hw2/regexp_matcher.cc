@@ -90,6 +90,7 @@ bool BuildRegExpMatcher(const char* regexp, RegExpMatcher* regexp_matcher) {
           cursor++;
       }
       else if (handle == OR) {
+          // Break regexp if OR(|) appears
           currentRegExp->or_ops_count++;
           currentRegExp->elements.push_back(vector<RegExp*>(0));
           cursor++;
