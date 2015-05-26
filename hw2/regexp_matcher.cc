@@ -14,9 +14,11 @@ void printRegExp(RegExp* regExp) {
     }
     else {
         if (regExp->tokenType == RE_GROUP) printf("(");
+        else if (regExp->tokenType == RE_SETCHAR) printf("[");
         for (int i=0; i<regExp->elements.size(); i++)
             printRegExp(regExp->elements[i]);
         if (regExp->tokenType == RE_GROUP) printf(")");
+        else if (regExp->tokenType == RE_SETCHAR) printf("]");
     }
 }
 
@@ -70,11 +72,21 @@ bool BuildRegExpMatcher(const char* regexp, RegExpMatcher* regexp_matcher) {
       }
       else if (handle == OPEN_SET) {
           printf("Opening new set of characters\n");
-          ;
+          // 1. construct new set
+          RegExp* setRegExp = new RegExp(RE_SETCHAR);
+          setRegExp->container = currentRegExp;
+          // 2. and push it into current stack
+          currentRegExp->elements.push_back(setRegExp);
+          // 3. and change current stack to new set
+          currentRegExp = setRegExp;
+          cursor++;
       }
       else if (handle == CLOSE_SET) {
           printf("Closing set of characters\n");
-          ;
+          // Closing unopened set, error
+          if (currentRegExp->tokenType != RE_SETCHAR) return false;
+          currentRegExp = currentRegExp->container;
+          cursor++;
       }
       else if (handle == OR) {
           printf("OR expression\n");
