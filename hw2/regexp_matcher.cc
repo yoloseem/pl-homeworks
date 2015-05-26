@@ -15,8 +15,11 @@ void printRegExp(RegExp* regExp) {
     else {
         if (regExp->tokenType == RE_GROUP) printf("(");
         else if (regExp->tokenType == RE_SETCHAR) printf("[");
-        for (int i=0; i<regExp->elements[0].size(); i++)
-            printRegExp(regExp->elements[0][i]);
+        for (int i=0; i<=regExp->or_ops_count; i++) {
+          if (i > 0) printf("|");
+          for (int j=0; j<regExp->elements[i].size(); j++)
+              printRegExp(regExp->elements[i][j]);
+        }
         if (regExp->tokenType == RE_GROUP) printf(")");
         else if (regExp->tokenType == RE_SETCHAR) printf("]");
     }
@@ -37,7 +40,8 @@ bool BuildRegExpMatcher(const char* regexp, RegExpMatcher* regexp_matcher) {
           // 1. construct new regexp accepts any single character
           RegExp* anyCharRegExp = new RegExp(RE_ANYCHAR);
           // 2. and push it into current stack
-          currentRegExp->elements[0].push_back(anyCharRegExp);
+          currentRegExp->elements[currentRegExp->or_ops_count]
+            .push_back(anyCharRegExp);
           cursor++;
       }
       else if (handle == STAR) {
@@ -46,10 +50,12 @@ bool BuildRegExpMatcher(const char* regexp, RegExpMatcher* regexp_matcher) {
           if (currentRegExp->elements[0].size() == 0) return false;
           // 1. construct new *-repeat regexp on previous element
           RegExp* starRegExp = new RegExp(RE_STAR);
-          starRegExp->elements[0].push_back(currentRegExp->elements[0].back());
-          currentRegExp->elements[0].pop_back();
+          starRegExp->elements[0].push_back(
+            currentRegExp->elements[currentRegExp->or_ops_count].back());
+          currentRegExp->elements[currentRegExp->or_ops_count].pop_back();
           // 2. and push it into current stack
-          currentRegExp->elements[0].push_back(starRegExp);
+          currentRegExp->elements[currentRegExp->or_ops_count]
+            .push_back(starRegExp);
           cursor++;
       }
       else if (handle == OPEN_GROUP) {
@@ -58,7 +64,8 @@ bool BuildRegExpMatcher(const char* regexp, RegExpMatcher* regexp_matcher) {
           RegExp* groupRegExp = new RegExp(RE_GROUP);
           groupRegExp->container = currentRegExp;
           // 2. and push it into current stack
-          currentRegExp->elements[0].push_back(groupRegExp);
+          currentRegExp->elements[currentRegExp->or_ops_count]
+            .push_back(groupRegExp);
           // 3. and change current stack to new group
           currentRegExp = groupRegExp;
           cursor++;
@@ -76,7 +83,8 @@ bool BuildRegExpMatcher(const char* regexp, RegExpMatcher* regexp_matcher) {
           RegExp* setRegExp = new RegExp(RE_SETCHAR);
           setRegExp->container = currentRegExp;
           // 2. and push it into current stack
-          currentRegExp->elements[0].push_back(setRegExp);
+          currentRegExp->elements[currentRegExp->or_ops_count]
+            .push_back(setRegExp);
           // 3. and change current stack to new set
           currentRegExp = setRegExp;
           cursor++;
@@ -90,7 +98,9 @@ bool BuildRegExpMatcher(const char* regexp, RegExpMatcher* regexp_matcher) {
       }
       else if (handle == OR) {
           printf("OR expression\n");
-          ;
+          currentRegExp->or_ops_count++;
+          currentRegExp->elements.push_back(vector<RegExp*>(0));
+          cursor++;
       }
       else /* alphabets */ {
           printf("Single character\n");
@@ -98,7 +108,8 @@ bool BuildRegExpMatcher(const char* regexp, RegExpMatcher* regexp_matcher) {
           RegExp* singleCharRegExp = new RegExp(RE_CHAR);
           singleCharRegExp->primitiveValue = handle;
           // 2. and push it into current stack
-          currentRegExp->elements[0].push_back(singleCharRegExp);
+          currentRegExp->elements[currentRegExp->or_ops_count]
+            .push_back(singleCharRegExp);
           cursor++;
       }
   }

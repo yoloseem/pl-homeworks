@@ -30,7 +30,7 @@ struct RegExp {
   char primitiveValue;  // Used only when tokenType is CHARACTER
   vector< vector<RegExp*> > elements;  // Children elements
   RegExp* container;  // Reference to parent regexp
-  int or_ops_counts;
+  int or_ops_count;
 
   RegExp(RegExpTokenType tkType) {
     tokenType = tkType;
@@ -38,7 +38,7 @@ struct RegExp {
     elements = vector< vector<RegExp*> >(1);
     elements[0].resize(0);
     container = NULL;
-    or_ops_counts = 0;
+    or_ops_count = 0;
   }
 };
 
