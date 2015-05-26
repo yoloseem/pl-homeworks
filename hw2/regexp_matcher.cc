@@ -41,7 +41,6 @@ bool BuildRegExpMatcher(const char* regexp, RegExpMatcher* regexp_matcher) {
           handle != OPEN_SET && handle != CLOSE_SET)
         alphabets.insert(handle);
   }
-  printf("# of alphabets: %lu\n", alphabets.size());
 
   cursor = 0;
   RegExp* currentRegExp = rootRegExp;
