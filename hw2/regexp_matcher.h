@@ -28,7 +28,15 @@ const char OR = '|';
 struct RegExp {
   RegExpTokenType tokenType;
   char primitiveValue;  // Used only when tokenType is CHARACTER
-  vector<RegExp> elements;  // Children elements
+  vector<RegExp*> elements;  // Children elements
+  RegExp* container;  // Reference to parent regexp
+
+  RegExp(RegExpTokenType tkType) {
+    tokenType = tkType;
+    primitiveValue = '\0';
+    elements = vector<RegExp*>(0);
+    container = NULL;
+  }
 };
 
 struct RegExpMatcher {
