@@ -44,14 +44,13 @@ bool BuildRegExpMatcher(const char* regexp, RegExpMatcher* regexp_matcher) {
 
   cursor = 0;
   RegExp* currentRegExp = rootRegExp;
-  while((handle = regexp[cursor]) != '\0') {
+  while((handle = regexp[cursor++]) != '\0') {
       if (handle == ANYCHAR) {
           // 1. construct new regexp accepts any single character
           RegExp* anyCharRegExp = new RegExp(RE_ANYCHAR);
           // 2. and push it into current stack
           currentRegExp->elements[currentRegExp->or_ops_count]
             .push_back(anyCharRegExp);
-          cursor++;
       }
       else if (handle == STAR) {
           // If no previous element to *-repeat, error
@@ -64,7 +63,6 @@ bool BuildRegExpMatcher(const char* regexp, RegExpMatcher* regexp_matcher) {
           // 2. and push it into current stack
           currentRegExp->elements[currentRegExp->or_ops_count]
             .push_back(starRegExp);
-          cursor++;
       }
       else if (handle == OPEN_GROUP) {
           // 1. construct new group
@@ -75,13 +73,11 @@ bool BuildRegExpMatcher(const char* regexp, RegExpMatcher* regexp_matcher) {
             .push_back(groupRegExp);
           // 3. and change current stack to new group
           currentRegExp = groupRegExp;
-          cursor++;
       }
       else if (handle == CLOSE_GROUP) {
           // Closing unopened group, error
           if (currentRegExp->tokenType != RE_GROUP) return false;
           currentRegExp = currentRegExp->container;
-          cursor++;
       }
       else if (handle == OPEN_SET) {
           // 1. construct new set
@@ -92,19 +88,16 @@ bool BuildRegExpMatcher(const char* regexp, RegExpMatcher* regexp_matcher) {
             .push_back(setRegExp);
           // 3. and change current stack to new set
           currentRegExp = setRegExp;
-          cursor++;
       }
       else if (handle == CLOSE_SET) {
           // Closing unopened set, error
           if (currentRegExp->tokenType != RE_SETCHAR) return false;
           currentRegExp = currentRegExp->container;
-          cursor++;
       }
       else if (handle == OR) {
           // Break regexp if OR(|) appears
           currentRegExp->or_ops_count++;
           currentRegExp->elements.push_back(vector<RegExp*>(0));
-          cursor++;
       }
       else /* alphabets */ {
           // 1. construct new regexp accepts any single character
@@ -113,7 +106,6 @@ bool BuildRegExpMatcher(const char* regexp, RegExpMatcher* regexp_matcher) {
           // 2. and push it into current stack
           currentRegExp->elements[currentRegExp->or_ops_count]
             .push_back(singleCharRegExp);
-          cursor++;
       }
   }
 
