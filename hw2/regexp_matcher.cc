@@ -9,7 +9,7 @@ void printRegExp(RegExp* regExp) {
     else if (regExp->tokenType == RE_ANYCHAR)
         printf(".");
     else if (regExp->tokenType == RE_STAR) {
-        printRegExp(&regExp->elements[0]);
+        printRegExp(regExp->elements[0]);
         printf("*");
     }
     else {
@@ -23,29 +23,27 @@ void printRegExp(RegExp* regExp) {
 bool BuildRegExpMatcher(const char* regexp, RegExpMatcher* regexp_matcher) {
   // Returns false when parse error
 
-  RegExp rootRegExp;
-  rootRegExp.tokenType = RE_REGEXP;
-  rootRegExp.elements.resize(0);
+  RegExp *rootRegExp = new RegExp(RE_REGEXP);
 
   int cursor = 0;
   char handle;
-  RegExp* currentRegExp = &rootRegExp;
+  RegExp* currentRegExp = rootRegExp;
   while((handle = regexp[cursor]) != '\0') {
       if (handle == ANYCHAR) {
-          RegExp anyCharRegExp;
+          printf("Any single character\n");
           // 1. construct new regexp accepts any single character
-          anyCharRegExp.tokenType = RE_ANYCHAR;
+          RegExp* anyCharRegExp = new RegExp(RE_ANYCHAR);
           // 2. and push it into current stack
           currentRegExp->elements.push_back(anyCharRegExp);
           cursor++;
       }
       else if (handle == STAR) {
-          RegExp starRegExp;
+          printf("Kleene-Star\n");
           // If no previous element to *-repeat, error
           if (currentRegExp->elements.size() == 0) return false;
-          starRegExp.tokenType = RE_STAR;
           // 1. construct new *-repeat regexp on previous element
-          starRegExp.elements.push_back(currentRegExp->elements.back());
+          RegExp* starRegExp = new RegExp(RE_STAR);
+          starRegExp->elements.push_back(currentRegExp->elements.back());
           currentRegExp->elements.pop_back();
           // 2. and push it into current stack
           currentRegExp->elements.push_back(starRegExp);
@@ -67,18 +65,18 @@ bool BuildRegExpMatcher(const char* regexp, RegExpMatcher* regexp_matcher) {
           ;
       }
       else /* alphabets */ {
-          RegExp singleCharRegExp;
+          printf("Single character\n");
           // 1. construct new regexp accepts any single character
-          singleCharRegExp.tokenType = RE_CHAR;
-          singleCharRegExp.primitiveValue = handle;
+          RegExp* singleCharRegExp = new RegExp(RE_CHAR);
+          singleCharRegExp->primitiveValue = handle;
           // 2. and push it into current stack
           currentRegExp->elements.push_back(singleCharRegExp);
           cursor++;
       }
   }
 
-
-  printRegExp(&rootRegExp);
+  printRegExp(rootRegExp);
+  printf("\n");
 
   return false;
 }
