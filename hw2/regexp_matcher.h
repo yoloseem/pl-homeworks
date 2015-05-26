@@ -35,6 +35,8 @@ struct RegExpMatcher {
   // Design your RegExpMatcher structure.
 };
 
+void printRegExp(RegExp* regExp); // Print parsed regular expression (to debug)
+
 // Homework 2.2
 bool BuildRegExpMatcher(const char* regexp, RegExpMatcher* regexp_matcher);
 
