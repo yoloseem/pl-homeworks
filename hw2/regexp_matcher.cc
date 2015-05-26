@@ -1,6 +1,8 @@
 // PL homework: hw2
 // regexp_matcher.cc
 
+#include <set>
+
 #include "regexp_matcher.h"
 
 void printRegExp(RegExp* regExp) {
@@ -29,9 +31,19 @@ bool BuildRegExpMatcher(const char* regexp, RegExpMatcher* regexp_matcher) {
   // Returns false when parse error
 
   RegExp *rootRegExp = new RegExp(RE_REGEXP);
-
-  int cursor = 0;
+  set<char> alphabets;
   char handle;
+  int cursor = 0;
+
+  while((handle = regexp[cursor++]) != '\0') {
+      if (handle != ANYCHAR && handle != STAR && handle != OR &&
+          handle != OPEN_GROUP && handle != CLOSE_GROUP &&
+          handle != OPEN_SET && handle != CLOSE_SET)
+        alphabets.insert(handle);
+  }
+  printf("# of alphabets: %lu\n", alphabets.size());
+
+  cursor = 0;
   RegExp* currentRegExp = rootRegExp;
   while((handle = regexp[cursor]) != '\0') {
       if (handle == ANYCHAR) {
