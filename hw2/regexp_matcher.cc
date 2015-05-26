@@ -13,10 +13,10 @@ void printRegExp(RegExp* regExp) {
         printf("*");
     }
     else {
-        int i;
-        for (i=0; i<regExp->elements.size(); i++) {
-            printRegExp(&regExp->elements[i]);
-        }
+        if (regExp->tokenType == RE_GROUP) printf("(");
+        for (int i=0; i<regExp->elements.size(); i++)
+            printRegExp(regExp->elements[i]);
+        if (regExp->tokenType == RE_GROUP) printf(")");
     }
 }
 
@@ -50,10 +50,22 @@ bool BuildRegExpMatcher(const char* regexp, RegExpMatcher* regexp_matcher) {
           cursor++;
       }
       else if (handle == OPEN_GROUP) {
-          ;
+          printf("Opening new group of expressions\n");
+          // 1. construct new group
+          RegExp* groupRegExp = new RegExp(RE_GROUP);
+          groupRegExp->container = currentRegExp;
+          // 2. and push it into current stack
+          currentRegExp->elements.push_back(groupRegExp);
+          // 3. and change current stack to new group
+          currentRegExp = groupRegExp;
+          cursor++;
       }
       else if (handle == CLOSE_GROUP) {
-          ;
+          printf("Closing group of expressions\n");
+          // Closing unopened group, error
+          if (currentRegExp->tokenType != RE_GROUP) return false;
+          currentRegExp = currentRegExp->container;
+          cursor++;
       }
       else if (handle == OPEN_SET) {
           ;
