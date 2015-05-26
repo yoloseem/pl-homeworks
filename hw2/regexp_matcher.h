@@ -15,4 +15,3 @@ bool BuildRegExpMatcher(const char* regexp, RegExpMatcher* regexp_matcher);
 bool RunRegExpMatcher(const RegExpMatcher* regexp_matcher, const char* str);
 
 #endif  //_PL_HOMEWORK_REGEXP_MATCHER_H_
-
