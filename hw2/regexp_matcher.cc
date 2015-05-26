@@ -29,6 +29,7 @@ bool BuildRegExpMatcher(const char* regexp, RegExpMatcher* regexp_matcher) {
   char handle;
   RegExp* currentRegExp = rootRegExp;
   while((handle = regexp[cursor]) != '\0') {
+      printf("handle: %c ", handle);
       if (handle == ANYCHAR) {
           printf("Any single character\n");
           // 1. construct new regexp accepts any single character
@@ -68,12 +69,15 @@ bool BuildRegExpMatcher(const char* regexp, RegExpMatcher* regexp_matcher) {
           cursor++;
       }
       else if (handle == OPEN_SET) {
+          printf("Opening new set of characters\n");
           ;
       }
       else if (handle == CLOSE_SET) {
+          printf("Closing set of characters\n");
           ;
       }
       else if (handle == OR) {
+          printf("OR expression\n");
           ;
       }
       else /* alphabets */ {
