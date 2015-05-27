@@ -327,10 +327,40 @@ int FindTransitions(RegExp* regExp,
                     fsaElements->push_back(*groupEndElem);
                     curId++;
                 }
+                else if (regExp->elements[i][j]->tokenType == RE_STAR) {
+                    int tmpCurId = curId;
+                    TableElement* starStartElem =
+                        new TableElement(tmpCurId, kEps, tmpCurId + 1);
+                    fsaElements->push_back(*starStartElem);
+                    curId = FindTransitions(
+                        regExp->elements[i][j]->elements[0][0],
+                        fsaElements,
+                        alphabetsSet,
+                        tmpCurId + 1,
+                        tmpCurId + 2
+                    );
+                    TableElement* starZeroRepeatElem =
+                        new TableElement(tmpCurId + 1, kEps, tmpCurId + 2);
+                    fsaElements->push_back(*starZeroRepeatElem);
+                    TableElement* starRepeatElem =
+                        new TableElement(tmpCurId + 2, kEps, tmpCurId + 1);
+                    fsaElements->push_back(*starRepeatElem);
+                    TableElement* starEndElem =
+                        new TableElement(tmpCurId + 2, kEps, curId + 1);
+                    fsaElements->push_back(*starEndElem);
+                    curId++;
+                }
             }
             TableElement* endElem = new TableElement(curId, kEps, finalState);
             fsaElements->push_back(*endElem);
         }
+    }
+    else if (regExp->tokenType == RE_CHAR) {
+        TableElement* charElem = new TableElement(
+            startState, regExp->primitiveValue, finalState
+        );
+        fsaElements->push_back(*charElem);
+        curId = finalState;
     }
     return curId;
 }
