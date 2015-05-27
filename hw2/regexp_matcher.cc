@@ -251,12 +251,6 @@ int FindTransitions(RegExp* regExp,
     vector<char> alphabets = vector<char>(alphabetsSet->begin(),
                                           alphabetsSet->end());
 
-    printf("FindTransitions(");
-    printRegExp(regExp);
-    printf(")\n");
-    printf("Configured startState = %d, finalState = %d\n",
-           startState, finalState);
-
     int curId = finalState;
     if (regExp->tokenType == RE_REGEXP || regExp->tokenType == RE_GROUP) {
         for (int i=0; i<=regExp->or_ops_count; i++) {
@@ -474,14 +468,7 @@ bool BuildRegExpMatcher(const char* regexp, RegExpMatcher* regexp_matcher) {
   fsa_elements.clear();
 
   FindTransitions(rootRegExp, &fsa_elements, &alphabets, 0, 1);
-  printf("fsa_elements.size() = %lu\n", fsa_elements.size());
-  for(int i=0; i<fsa_elements.size(); i++) {
-      printf("%d =(%c)=> %d\n",
-             fsa_elements[i].state,
-             fsa_elements[i].input_char,
-             fsa_elements[i].next_state);
 
-  }
   set<int> accept_states_set;
   accept_states_set.insert(1);
   int statesCount;
