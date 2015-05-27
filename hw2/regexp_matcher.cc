@@ -278,17 +278,17 @@ int FindTransitions(RegExp* regExp,
                     int charCount = alphabets.size();
                     for(int k=0; k<charCount; k++) {
                         TableElement* elem = new TableElement(
-                            curId, alphabets[k], curId + 1 + k
+                            curId, alphabets[k], curId + 1
                         );
                         fsaElements->push_back(*elem);
                         elem = new TableElement(
-                            curId + 1 + k,
+                            curId + 1,
                             kEps,
-                            curId + charCount + 1
+                            curId + 2
                         );
                         fsaElements->push_back(*elem);
                     }
-                    curId += charCount + 1;
+                    curId += 2;
                 }
                 else if (regExp->elements[i][j]->tokenType == RE_SETCHAR) {
                     int charCount = regExp->elements[i][j]->elements[0].size();
@@ -298,17 +298,17 @@ int FindTransitions(RegExp* regExp,
                             regExp->elements[i][j]
                                   ->elements[0][k]
                                   ->primitiveValue,
-                            curId + 1 + k
+                            curId + 1
                         );
                         fsaElements->push_back(*elem);
                         elem = new TableElement(
-                            curId + 1 + k,
+                            curId + 1,
                             kEps,
-                            curId + charCount + 1
+                            curId + 2
                         );
                         fsaElements->push_back(*elem);
                     }
-                    curId += charCount + 1;
+                    curId += 2;
                 }
                 else if (regExp->elements[i][j]->tokenType == RE_GROUP) {
                     int tmpCurId = curId;
