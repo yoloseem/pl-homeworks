@@ -1,11 +1,36 @@
 // PL homework: hw2
 // regexp_matcher.h
 
+#include <map>
+#include <set>
 #include <vector>
 using namespace std;
 
 #ifndef _PL_HOMEWORK_REGEXP_MATCHER_H_
 #define _PL_HOMEWORK_REGEXP_MATCHER_H_
+
+struct TableElement {
+  int state;
+  char input_char;
+  int next_state;
+  TableElement(int stateId, char transitionChar, int nextStateId) {
+      state = stateId;
+      input_char = transitionChar;
+      next_state = nextStateId;
+  }
+};
+struct FiniteStateAutomaton {
+  int start_state;
+  std::vector<int> states;
+  std::vector<char> alphabets;
+  std::vector<int> accept_states;
+  std::map< int, std::map<char, int> > transitions;
+};
+bool RunFSA(const FiniteStateAutomaton* fsa, const char* str);
+bool BuildFSA(const TableElement* elements, int num_elements,
+              const int* accept_states, int num_accept_states,
+              FiniteStateAutomaton* fsa);
+bool BuildFSA(const char* regex, FiniteStateAutomaton* fsa);
 
 enum RegExpTokenType {
     RE_REGEXP,  // Sequence of any regular expressions
@@ -41,10 +66,18 @@ struct RegExp {
 };
 
 struct RegExpMatcher {
-  // Design your RegExpMatcher structure.
+  RegExp* regExp;
+  FiniteStateAutomaton* fsa;
 };
 
 void printRegExp(RegExp* regExp); // Print parsed regular expression (to debug)
+
+int FindTransitions(vector<RegExp*>* regExpElements,
+                    vector<TableElement>* fsaElements,
+                    set<char> alphabets,
+                    int startState, int finalState);
+// Find FSA transitions from regExp and update it into fsaElements
+// Returns maximum used id value that will be used in next finding part
 
 // Homework 2.2
 bool BuildRegExpMatcher(const char* regexp, RegExpMatcher* regexp_matcher);
