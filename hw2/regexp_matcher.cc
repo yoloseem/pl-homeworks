@@ -1,6 +1,7 @@
 // PL homework: hw2
 // regexp_matcher.cc
 
+#include <cstdio>
 #include <iostream>
 #include <stdexcept>
 #include <iterator>
