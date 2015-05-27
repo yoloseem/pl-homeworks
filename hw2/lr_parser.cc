@@ -5,7 +5,6 @@
 
 #include <iostream>
 #include <stack>
-#include <tuple>
 #include <vector>
 
 #include "lr_parser.h"
