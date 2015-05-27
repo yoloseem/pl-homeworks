@@ -384,11 +384,24 @@ bool BuildRegExpMatcher(const char* regexp, RegExpMatcher* regexp_matcher) {
              fsa_elements[i].next_state);
 
   }
-  vector<int> accept_states;
+  set<int> accept_states_set;
   /* TODO: Discovery all final states */
-  accept_states.push_back(6);
-  accept_states.push_back(11);
-  accept_states.push_back(16);
+  accept_states_set.insert(1);
+  int statesCount;
+  do {
+    statesCount = accept_states_set.size();
+    for(int i=0; i<fsa_elements.size(); i++) {
+        if (fsa_elements[i].input_char != kEps) continue;
+        vector<int> accept_states_vec =
+            vector<int>(accept_states_set.begin(), accept_states_set.end());
+        for(int j=0; j<accept_states_vec.size(); j++) {
+            if (fsa_elements[i].next_state == accept_states_vec[j])
+                accept_states_set.insert(fsa_elements[i].state);
+        }
+    }
+  } while(statesCount != accept_states_set.size());
+  vector<int> accept_states =
+      vector<int>(accept_states_set.begin(), accept_states_set.end());
 
   regexp_matcher->fsa = new FiniteStateAutomaton();
   return BuildFSA(&fsa_elements[0], fsa_elements.size(),
