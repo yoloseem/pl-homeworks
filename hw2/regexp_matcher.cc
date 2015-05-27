@@ -372,6 +372,16 @@ int FindTransitions(RegExp* regExp,
         }
         curId = finalState;
     }
+    else if (regExp->tokenType == RE_SETCHAR) {
+        int charCount = regExp->elements[0].size();
+        for(int k=0; k<charCount; k++) {
+            TableElement* elem = new TableElement(
+                startState, regExp->elements[0][k]->primitiveValue, finalState
+            );
+            fsaElements->push_back(*elem);
+        }
+        curId = finalState;
+    }
     return curId;
 }
 
