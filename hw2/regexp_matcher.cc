@@ -282,6 +282,47 @@ int FindTransitions(RegExp* regExp,
                         curId++;
                     }
                 }
+                else if (regExp->elements[i][j]->tokenType == RE_SETCHAR) {
+                    int charCount = regExp->elements[i][j]->elements[0].size();
+                    for(int k=0; k<charCount; k++) {
+                        TableElement* elem = new TableElement(
+                            curId,
+                            regExp->elements[i][j]
+                                  ->elements[0][k]
+                                  ->primitiveValue,
+                            curId + 1 + k
+                        );
+                        fsaElements->push_back(*elem);
+                        elem = new TableElement(
+                            curId + 1 + k,
+                            kEps,
+                            curId + charCount + 1
+                        );
+                        fsaElements->push_back(*elem);
+                    }
+                    curId += charCount + 1;
+                }
+                else if (regExp->elements[i][j]->tokenType == RE_GROUP) {
+                    int tmpCurId = curId;
+                    cout << "curId(tmpCurId): " << tmpCurId << endl;
+                    cout << "curId(tmpCurId) + 1: " << tmpCurId + 1 << endl;
+                    cout << "curId(tmpCurId) + 2: " << tmpCurId + 2 << endl;
+                    TableElement* groupStartElem =
+                        new TableElement(tmpCurId, kEps, tmpCurId + 1);
+                    fsaElements->push_back(*groupStartElem);
+                    curId = FindTransitions(
+                        regExp->elements[i][j],
+                        fsaElements,
+                        alphabetsSet,
+                        tmpCurId + 1,
+                        tmpCurId + 2
+                    );
+                    cout << "Changed curId: " << curId << endl;
+                    TableElement* groupEndElem =
+                        new TableElement(tmpCurId + 2, kEps, curId + 1);
+                    fsaElements->push_back(*groupEndElem);
+                    curId++;
+                }
             }
             TableElement* endElem = new TableElement(curId, kEps, finalState);
             fsaElements->push_back(*endElem);
