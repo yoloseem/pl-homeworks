@@ -433,7 +433,6 @@ bool BuildRegExpMatcher(const char* regexp, RegExpMatcher* regexp_matcher) {
 
   }
   set<int> accept_states_set;
-  /* TODO: Discovery all final states */
   accept_states_set.insert(1);
   int statesCount;
   do {
