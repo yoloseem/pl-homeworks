@@ -275,12 +275,20 @@ int FindTransitions(RegExp* regExp,
                     curId++;
                 }
                 else if (regExp->elements[i][j]->tokenType == RE_ANYCHAR) {
-                    for(int k=0; k<alphabets.size(); k++) {
-                        TableElement* elem =
-                            new TableElement(curId, alphabets[k], curId + 1);
+                    int charCount = alphabets.size();
+                    for(int k=0; k<charCount; k++) {
+                        TableElement* elem = new TableElement(
+                            curId, alphabets[k], curId + 1 + k
+                        );
                         fsaElements->push_back(*elem);
-                        curId++;
+                        elem = new TableElement(
+                            curId + 1 + k,
+                            kEps,
+                            curId + charCount + 1
+                        );
+                        fsaElements->push_back(*elem);
                     }
+                    curId += charCount + 1;
                 }
                 else if (regExp->elements[i][j]->tokenType == RE_SETCHAR) {
                     int charCount = regExp->elements[i][j]->elements[0].size();
@@ -345,6 +353,9 @@ bool BuildRegExpMatcher(const char* regexp, RegExpMatcher* regexp_matcher) {
           handle != OPEN_SET && handle != CLOSE_SET)
         alphabets.insert(handle);
   }
+  for (char s='a'; s<='z'; s++) alphabets.insert(s);
+  for (char s='A'; s<='Z'; s++) alphabets.insert(s);
+  for (char s='0'; s<='9'; s++) alphabets.insert(s);
 
   cursor = 0;
   RegExp* currentRegExp = rootRegExp;
