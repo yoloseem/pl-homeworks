@@ -312,9 +312,6 @@ int FindTransitions(RegExp* regExp,
                 }
                 else if (regExp->elements[i][j]->tokenType == RE_GROUP) {
                     int tmpCurId = curId;
-                    cout << "curId(tmpCurId): " << tmpCurId << endl;
-                    cout << "curId(tmpCurId) + 1: " << tmpCurId + 1 << endl;
-                    cout << "curId(tmpCurId) + 2: " << tmpCurId + 2 << endl;
                     TableElement* groupStartElem =
                         new TableElement(tmpCurId, kEps, tmpCurId + 1);
                     fsaElements->push_back(*groupStartElem);
@@ -325,7 +322,6 @@ int FindTransitions(RegExp* regExp,
                         tmpCurId + 1,
                         tmpCurId + 2
                     );
-                    cout << "Changed curId: " << curId << endl;
                     TableElement* groupEndElem =
                         new TableElement(tmpCurId + 2, kEps, curId + 1);
                     fsaElements->push_back(*groupEndElem);
