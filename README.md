@@ -8,3 +8,4 @@
 
 * [homework 1](https://github.com/yoloseem/pl-homeworks/tree/master/hw1)
 * [homework 2](https://github.com/yoloseem/pl-homeworks/tree/master/hw2)
+* [homework 3](https://github.com/yoloseem/pl-homeworks/tree/master/hw3)
