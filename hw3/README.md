@@ -2,8 +2,8 @@
 
 ### Due: June 19 (Fri)  11:59 pm
 
-– Zip the source code (ONLY `.hs` files; absolutely no executable or object files) and submit it in ezhub (portal).
-    – The program must run on the Linux server (`csedev.hanyang.ac.kr`).
+- Zip the source code (ONLY `.hs` files; absolutely no executable or object files) and submit it in ezhub (portal).
+    - The program must run on the Linux server (`csedev.hanyang.ac.kr`).
 
 Write Haskell functions for the following problems.
 
