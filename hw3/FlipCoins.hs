@@ -1,10 +1,3 @@
-flipHT :: String -> Integer -> String
-flipHT [] a = []
-flipHT xs 0 = xs
-flipHT (x:xs) a = [if x == 'H' then 'T' else 'H'] ++
-                  (if a > 0 then flipHT xs (a - 1) else xs)
-
-
 flipCoin' :: String -> Integer -> [Integer]
 flipCoin' [] o = [0]
 flipCoin' [x] o
