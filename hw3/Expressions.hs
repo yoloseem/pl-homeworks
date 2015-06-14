@@ -23,6 +23,7 @@ expr n d
     | n `mod` 2 /= 0 = []
     | d <= 0 = []
     | d * 2 > n = []
+    | d * 2 == n = [(concat $ (replicate d "(") ++ (replicate d ")"))]
     | otherwise = nub (
         (map (\e -> "(" ++ e ++ ")") (expr (n - 2) (d - 1))) ++
         (concatMap (\(m, b) -> prodBoth (expr m b) (expr (n - m) d)) mbs) ++
